@@ -1,95 +1,72 @@
-# User Registration API Documentation
 
-## Endpoint
+# 🚗 Uber Clone – Backend API
 
-`POST /users/register`
-
----
-
-## Description
-
-Registers a new user in the system. On successful registration, returns a JWT token and the created user object.
+This is the backend service for the Uber Clone application built using the **MERN Stack** (MongoDB, Express.js, React, Node.js). It handles **user registration**, **authentication**, and will support future features like **ride booking**, **real-time sockets**, and **driver/passenger management**.
 
 ---
 
-## Request Body
+## 🌐 Base URL
 
-Send a JSON object with the following structure:
+```
+http://localhost:4000
+```
+
+---
+
+## 📦 Tech Stack
+
+- **Node.js** + **Express.js**
+- **MongoDB** + **Mongoose**
+- **JWT Authentication**
+- **bcrypt** for password hashing
+- **express-validator** for input validation
+- **dotenv** for environment variables
+
+---
+
+## 📁 Project Structure
+
+```
+Backend/
+│
+├── controllers/         # Route Handlers (e.g. register, login)
+├── models/              # Mongoose Schemas (User)
+├── routes/              # Express Routers
+├── services/            # Business logic
+├── db/                  # MongoDB connection
+├── app.js               # App setup (middleware & routes)
+├── server.js            # Server startup
+├── .env                 # Environment config
+└── readme.md            # Project documentation
+```
+
+---
+
+## 🧾 API Endpoints
+
+### 🔐 User Registration
+
+- **POST** `/users/register`
+
+Registers a new user and returns a JWT token.
+
+#### ✅ Request Body (JSON)
 
 ```json
 {
   "fullname": {
-    "firstname": "John",      // Required, min 3 chars
-    "lastname": "Doe"         // Optional, min 3 chars if provided
+    "firstname": "John",
+    "lastname": "Doe"
   },
-  "email": "john@example.com", // Required, must be a valid email
-  "password": "secret123"      // Required, min 6 chars
+  "email": "john@example.com",
+  "password": "secret123"
 }
 ```
 
-### Field Requirements
-
-- `fullname.firstname` (string, required): User's first name (min 3 characters).
-- `fullname.lastname` (string, optional): User's last name (min 3 characters if provided).
-- `email` (string, required): Must be a valid email address.
-- `password` (string, required): Minimum 6 characters.
-
----
-
-## Responses
-
-### Success
-
-- **Status:** `201 Created`
-- **Body:**
-  ```json
-  {
-    "token": "<jwt_token>",
-    "user": {
-      "_id": "user_id",
-      "fullname": {
-        "firstname": "John",
-        "lastname": "Doe"
-      },
-      "email": "john@example.com",
-      // ...other fields
-    }
-  }
-  ```
-
-### Validation Error
-
-- **Status:** `400 Bad Request`
-- **Body:**
-  ```json
-  {
-    "errors": [
-      {
-        "msg": "First name is required",
-        "param": "fullname.firstname",
-        "location": "body"
-      },
-      // ...other errors
-    ]
-  }
-  ```
-
-### Other Errors
-
-- **Status:** `500 Internal Server Error`
-- **Body:**
-  ```json
-  {
-    "message": "Error message"
-  }
-  ```
-
----
-
-## Example Request
+#### 🔄 Sample curl Request
 
 ```bash
-curl -X POST http://localhost:5000/users/register \
+curl -X POST http://localhost:4000/users/register \
   -H "Content-Type: application/json" \
   -d '{
     "fullname": { "firstname": "John", "lastname": "Doe" },
@@ -98,6 +75,94 @@ curl -X POST http://localhost:5000/users/register \
   }'
 ```
 
+#### ✅ Success Response
+
+```json
+{
+  "token": "<jwt_token>",
+  "user": {
+    "_id": "user_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john@example.com"
+  }
+}
+```
+
 ---
 
-// filepath: d:\Projects UBER MERN\Backend\readme.md
+### 🔑 User Login (Coming Soon)
+
+- **POST** `/users/login`
+
+Will authenticate users and return a valid JWT.
+
+---
+
+## ⚠️ Validation Error Example
+
+```json
+{
+  "errors": [
+    {
+      "msg": "First name is required",
+      "param": "fullname.firstname",
+      "location": "body"
+    }
+  ]
+}
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1️⃣ Clone the repository
+
+```bash
+git clone https://github.com/sagarsarkar09/Build-an-Uber-Clone-App-with-MERN-Stack.git
+cd Backend
+```
+
+### 2️⃣ Install dependencies
+
+```bash
+npm install
+```
+
+### 3️⃣ Set up `.env` file
+
+```
+PORT=4000
+DB_CONNECT=mongodb://localhost:27017/uber-videos
+JWT_SECRET=your-secret-key
+```
+
+### 4️⃣ Start the server
+
+```bash
+npx nodemon
+```
+
+---
+
+## 📌 To Do Next
+
+- [ ] Login route with JWT auth
+- [ ] Protected routes with middleware
+- [ ] Socket integration for ride status
+- [ ] Role-based access (Driver / Passenger)
+
+---
+
+## 🙋‍♂️ Developer Info
+
+**Name:** Sagar Sarkar  
+**Location:** Jorhat, Assam, India  
+**GitHub:** [@sagarsarkar09](https://github.com/sagarsarkar09)
+
+---
+
+## 🚀 Happy Coding!

@@ -1,57 +1,48 @@
+# 🚖 Uber Clone Backend (MERN Stack)
 
-# 🚗 Uber Clone – Backend API
-
-This is the backend service for the Uber Clone application built using the **MERN Stack** (MongoDB, Express.js, React, Node.js). It handles **user registration**, **authentication**, and will support future features like **ride booking**, **real-time sockets**, and **driver/passenger management**.
-
----
-
-## 🌐 Base URL
-
-```
-http://localhost:4000
-```
+This is the backend service for an Uber Clone application using Node.js, Express, MongoDB, and JWT for authentication.
 
 ---
 
-## 📦 Tech Stack
-
-- **Node.js** + **Express.js**
-- **MongoDB** + **Mongoose**
-- **JWT Authentication**
-- **bcrypt** for password hashing
-- **express-validator** for input validation
-- **dotenv** for environment variables
-
----
-
-## 📁 Project Structure
+## 📁 Folder Structure
 
 ```
-Backend/
-│
-├── controllers/         # Route Handlers (e.g. register, login)
-├── models/              # Mongoose Schemas (User)
-├── routes/              # Express Routers
-├── services/            # Business logic
-├── db/                  # MongoDB connection
-├── app.js               # App setup (middleware & routes)
-├── server.js            # Server startup
-├── .env                 # Environment config
-└── readme.md            # Project documentation
+backend/
+├── controllers/
+│   └── user.controller.js
+├── models/
+│   ├── user.model.js
+│   └── blacklistToken.model.js
+├── routes/
+│   └── user.routes.js
+├── middleware/
+│   └── auth.middleware.js
+├── db/
+│   └── db.js
+├── app.js
+├── server.js
+├── .env
+└── package.json
 ```
 
 ---
 
-## 🧾 API Endpoints
+## ⚙️ Technologies Used
 
-### 🔐 User Registration
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT (JSON Web Token)
+- Bcrypt
+- Express Validator
 
-- **POST** `/users/register`
+---
 
-Registers a new user and returns a JWT token.
+## 📦 API Endpoints
 
-#### ✅ Request Body (JSON)
+### 📝 `POST /users/register` – Register a new user
 
+#### Request Body:
 ```json
 {
   "fullname": {
@@ -63,25 +54,12 @@ Registers a new user and returns a JWT token.
 }
 ```
 
-#### 🔄 Sample curl Request
-
-```bash
-curl -X POST http://localhost:4000/users/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "fullname": { "firstname": "John", "lastname": "Doe" },
-    "email": "john@example.com",
-    "password": "secret123"
-  }'
-```
-
-#### ✅ Success Response
-
+#### Response:
 ```json
 {
   "token": "<jwt_token>",
   "user": {
-    "_id": "user_id",
+    "_id": "...",
     "fullname": {
       "firstname": "John",
       "lastname": "Doe"
@@ -93,76 +71,80 @@ curl -X POST http://localhost:4000/users/register \
 
 ---
 
-### 🔑 User Login (Coming Soon)
+### 🔐 `POST /users/login` – Login a user
 
-- **POST** `/users/login`
-
-Will authenticate users and return a valid JWT.
-
----
-
-## ⚠️ Validation Error Example
-
+#### Request Body:
 ```json
 {
-  "errors": [
-    {
-      "msg": "First name is required",
-      "param": "fullname.firstname",
-      "location": "body"
-    }
-  ]
+  "email": "john@example.com",
+  "password": "secret123"
+}
+```
+
+#### Response:
+```json
+{
+  "token": "<jwt_token>",
+  "user": { "email": "john@example.com", ... }
 }
 ```
 
 ---
 
-## ⚙️ Setup Instructions
+### 🔒 `GET /users/profile` – Protected route (requires token)
 
-### 1️⃣ Clone the repository
-
-```bash
-git clone https://github.com/sagarsarkar09/Build-an-Uber-Clone-App-with-MERN-Stack.git
-cd Backend
+Send JWT in header:
+```
+Authorization: Bearer <token>
 ```
 
-### 2️⃣ Install dependencies
-
-```bash
-npm install
-```
-
-### 3️⃣ Set up `.env` file
-
-```
-PORT=4000
-DB_CONNECT=mongodb://localhost:27017/uber-videos
-JWT_SECRET=your-secret-key
-```
-
-### 4️⃣ Start the server
-
-```bash
-npx nodemon
+#### Response:
+```json
+{
+  "user": { "email": "john@example.com", "fullname": ... }
+}
 ```
 
 ---
 
-## 📌 To Do Next
+### 🚪 `POST /users/logout` – Logout and blacklist the token
 
-- [ ] Login route with JWT auth
-- [ ] Protected routes with middleware
-- [ ] Socket integration for ride status
-- [ ] Role-based access (Driver / Passenger)
+#### Description:
+Adds the current token to a blacklist with a TTL (Time To Live) of 24 hours. This prevents reuse after logout.
+
+#### Response:
+```json
+{
+  "message": "Logout successful. Token invalidated."
+}
+```
 
 ---
 
-## 🙋‍♂️ Developer Info
+## 🗃️ Token Blacklisting
+
+Blacklisted tokens are stored in MongoDB using the `blacklistToken.model.js` schema.
+
+- Each token has a TTL of **24 hours**.
+- Expired tokens are auto-deleted by MongoDB.
+
+---
+
+## 🧪 Testing
+
+Use Postman or curl to test:
+- `POST /users/register`
+- `POST /users/login`
+- `GET /users/profile` with token
+- `POST /users/logout`
+
+---
+
+## 📞 Contact Developer
 
 **Name:** Sagar Sarkar  
-**Location:** Jorhat, Assam, India  
-**GitHub:** [@sagarsarkar09](https://github.com/sagarsarkar09)
+**Location:** Jorhat, Assam, India
 
 ---
 
-## 🚀 Happy Coding!
+🚀 Happy Coding!

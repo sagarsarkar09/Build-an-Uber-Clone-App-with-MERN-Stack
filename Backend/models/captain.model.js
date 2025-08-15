@@ -68,6 +68,15 @@ const captainSchema = new mongoose.Schema({
   },
 });
 
+
+// Pre-save hook to hash password
+captainSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+
 // Methods
 captainSchema.methods.generateAuthToken = function () {
   const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
